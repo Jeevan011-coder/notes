@@ -1,0 +1,229 @@
+/* ==========================================================================
+   Root and Variables Setup (In case they aren't inherited)
+   ========================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+:root {
+    --bg-primary: #f4f6f9;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --accent-color: #4f46e5; 
+    --accent-hover: #4338ca;
+    --card-bg: #ffffff;
+    --border-color: #e2e8f0;
+}
+
+/* ==========================================================================
+   Full-Screen Layout Rules
+   ========================================================================== */
+
+.auth-body {
+    background-color: var(--card-bg); /* Match content background */
+    min-height: 100vh;
+    width: 100vw;
+    display: flex;
+    overflow-x: hidden;
+}
+
+.auth-container {
+    display: flex;
+    width: 100%;
+    height: 100vh;      /* Takes full screen height */
+    max-width: 100%;    /* Removes maximum width restriction */
+    background: var(--card-bg);
+    border-radius: 0;   /* Removes rounded corners for full bleed */
+    box-shadow: none;   /* Removes shadow since there are no borders */
+    margin: 0;          /* Removes margins around the screen */
+    overflow: hidden;
+}
+
+/* Auth Left Banner */
+.auth-sidebar {
+    width: 40%;         /* Adjusted slightly for a wide screen balance */
+    background-color: #312e81;
+    padding: 4rem 3.5rem; /* Slightly roomier padding for fullscreen */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: #ffffff;
+    height: 100%;
+}
+
+.auth-logo h2 {
+    color: #ffffff;
+    font-size: 1.5rem;
+}
+
+.auth-marketing h1 {
+    font-size: 2.5rem;  /* Stepped up size for fullscreen screens */
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+}
+
+.auth-marketing p {
+    color: #c7d2fe;
+    font-size: 1.05rem;
+    line-height: 1.6;
+}
+
+.auth-footer-text {
+    font-size: 0.8rem;
+    color: #818cf8;
+}
+
+/* Auth Form Content Area */
+.auth-content {
+    width: 60%;
+    height: 100%;
+    padding: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-box {
+    width: 100%;
+    max-width: 420px;   /* Clean sizing container for form elements */
+}
+
+.form-box h2 {
+    font-size: 2rem;    /* Made header punchier */
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    color: var(--text-main);
+}
+
+.form-box .subtitle {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 2.5rem;
+}
+
+.register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.input-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.input-group input {
+    width: 100%;
+    padding: 0.85rem 1rem; /* Slightly taller inputs for better ergonomics */
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    outline: none;
+    font-size: 0.95rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-group input:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.input-help {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* Checkbox Alignment */
+.checkbox-group {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+
+.checkbox-group input {
+    margin-top: 0.15rem;
+    accent-color: var(--accent-color);
+}
+
+.checkbox-group a, .auth-redirect a {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.checkbox-group a:hover, .auth-redirect a:hover {
+    text-decoration: underline;
+}
+
+/* Full Width Button */
+.btn-primary-block {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 0.9rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 0.5rem;
+}
+
+.btn-primary-block:hover {
+    background-color: var(--accent-hover);
+}
+
+.auth-redirect {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-top: 1.5rem;
+}
+
+/* Auth Responsive Breakpoint for Mobile/Tablets */
+@media (max-width: 768px) {
+    .auth-container {
+        height: auto;
+        min-height: 100vh;
+        flex-direction: column;
+    }
+    .auth-sidebar {
+        width: 100%;
+        height: auto;
+        padding: 3rem 2rem;
+        gap: 3rem;
+    }
+    .auth-marketing h1 {
+        font-size: 2rem;
+    }
+    .auth-content {
+        width: 100%;
+        height: auto;
+        padding: 3rem 2rem;
+    }
+}
+/* ---------- added: auth form feedback ---------- */
+.flash-messages { list-style: none; margin: 0 0 18px; padding: 0; }
+.flash {
+    padding: 11px 14px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    font-size: 0.86rem;
+    line-height: 1.4;
+    background-color: rgba(127, 127, 127, 0.08);
+}
+.flash-success { border-left: 4px solid #16a34a; color: #15803d; }
+.flash-error   { border-left: 4px solid #dc2626; color: #dc2626; }

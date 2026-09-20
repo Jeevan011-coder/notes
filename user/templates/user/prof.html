@@ -1,0 +1,118 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Profile - ShareNotes</title>
+  <link rel="stylesheet" href="{% static 'home.css' %}">
+  <link rel="stylesheet" href="{% static 'profile.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* Inline, highest-priority override so the sidebar is guaranteed to sit
+       flush against the left edge of the viewport, even if a cached copy
+       of profile.css/home.css is being served. */
+    .dashboard-container { display: flex !important; min-height: 100vh !important; width: 100% !important; margin: 0 !important; padding: 0 !important; }
+    body .sidebar { position: fixed !important; top: 0 !important; left: 0 !important; right: auto !important; height: 100vh !important; width: 260px !important; margin: 0 !important; border-radius: 0 !important; box-shadow: none !important; z-index: 999 !important; }
+    .main-content { margin-left: 260px !important; }
+    @media (max-width: 900px) {
+      body .sidebar { width: 70px !important; }
+      .main-content { margin-left: 70px !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="dashboard-container">
+
+    <aside class="sidebar">
+      <div class="logo">
+        <h2>📝 ShareNotes</h2>
+      </div>
+
+      <nav class="nav-links">
+        <a href="{% url 'home' %}">Dashboard</a>
+        <a href="#">My Notes</a>
+        <a href="#">Share notes</a>
+
+        <a href="{% url 'login' %}">Logout</a>
+      </nav>
+
+      <div class="user-profile" style="margin-bottom: 40px;">
+        <div class="avatar" style="width: 45px; height: 45px; min-height: 45px; min-width: 45px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
+          {% if user.profile.image %}
+            <img src="{{ user.profile.image.url }}" alt="" style="width: 100%; height: 100%; object-fit: cover; transform: scale(1.8); transform-origin: 35% 28%;">
+          {% endif %}
+        </div>
+        <div class="user-info">
+          <a href="{% url 'prof' %}" style="text-decoration: none; color: #777777;"> {{ user.username }}</a>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-wrap">
+
+        {% if messages %}
+          <div class="messages-stack">
+            {% for message in messages %}
+              <div class="flash-message">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <div class="profile-card">
+
+          <div class="cover-banner">
+            <div class="brand">
+              <span class="brand-icon">📖</span>
+              <span class="brand-text">
+                <span style="--i:1">N</span><span style="--i:2">o</span><span style="--i:3">t</span><span style="--i:4">e</span><span style="--i:5">H</span><span style="--i:6">u</span><span style="--i:7">b</span>
+              </span>
+            </div>
+          </div>
+
+          <div class="profile-section">
+            <div class="avatar-ring">
+              <div class="avatar">
+                {% if user.profile.image %}
+                  <img src="{{ user.profile.image.url }}" alt="{{ user.username }}'s avatar">
+                {% else %}
+                  <span class="avatar-fallback">{{ user.username|slice:":1"|upper }}</span>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="user-details">
+              <h1 class="user-name">{{ user.username }}</h1>
+              <p class="user-email">{{ user.email }}</p>
+              <span class="status-pill"><i class="dot"></i> Active</span>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h2 class="section-title">Edit profile</h2>
+            <p class="section-subtitle">Update your details and profile picture below.</p>
+
+            <form method="POST" enctype="multipart/form-data" class="profile-form">
+              {% csrf_token %}
+
+              <div class="field-grid">
+                {{ u_form.as_p }}
+                {{ p_form.as_p }}
+              </div>
+
+              <button class="btn-update" type="submit">
+                <span>Save changes</span>
+              </button>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </main>
+
+  </div>
+
+</body>
+</html>

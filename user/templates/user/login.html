@@ -1,0 +1,83 @@
+
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join ShareNotes - Create Account</title>
+    <link rel="stylesheet" href="{% static 'register.css' %}">
+    <!-- Google Fonts for a clean look -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="auth-body">
+
+    <div class="auth-container">
+        <!-- Left Side: Branding/Marketing -->
+        <div class="auth-sidebar">
+            <div class="auth-logo">
+                <h2>📝 ShareNotes</h2>
+            </div>
+            <div class="auth-marketing">
+                <h1>Capture thoughts. Share instantly.</h1>
+                <p>Join thousands of users who collaborate, organize, and sync their notes seamlessly in real-time.</p>
+            </div>
+            <div class="auth-footer-text">
+                &copy; 2026 ShareNotes Inc. All rights reserved.
+            </div>
+        </div>
+
+        <!-- Right Side: Registration Form -->
+        <div class="auth-content">
+            <div class="form-box">
+           
+                <h2>Login your account</h2>
+                <p class="subtitle">Start sharing and collaborating today.</p>
+
+                {% if messages %}
+                    <ul class="flash-messages">
+                        {% for message in messages %}
+                            <li class="flash flash-{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                {% if form.errors %}
+                    <ul class="flash-messages">
+                        <li class="flash flash-error">Wrong username or password. Please try again.</li>
+                    </ul>
+                {% endif %}
+
+                <form method="POST" class="register-form">
+                        {% csrf_token %}
+                 
+                    <!-- Full Name -->
+                    <div class="input-group">
+                        <label for="fullname">username</label>
+                        <input type="text" id="fullname" name='username' placeholder="John Doe" required>
+                    </div>
+
+                  
+
+                    <!-- Password -->
+                    <div class="input-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name='password' placeholder="••••••••" required>
+                        <span class="input-help">Must be at least 8 characters.</span>
+                    </div>
+
+                  
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn-primary-block">Login</button>
+                </form>
+
+                <!-- Redirect to Login -->
+                <p class="auth-redirect">
+                    Create an account? <a href="{%   url 'register' %}">Register</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

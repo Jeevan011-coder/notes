@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}ShareNotes - Dashboard{% endblock %}
+{% block nav_dashboard %}active{% endblock %}
+
+{% block content %}
+<div class="dashboard-body">
+
+    <section class="create-note-box" id="create-note">
+        <h3>Create &amp; Share a New Note</h3>
+
+        <form method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="form-error">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            {{ form.subject }}
+            {% if form.subject.errors %}<div class="form-error">{{ form.subject.errors }}</div>{% endif %}
+
+            {{ form.content }}
+            {% if form.content.errors %}<div class="form-error">{{ form.content.errors }}</div>{% endif %}
+
+            <div class="upload-row">
+                <label class="upload-label" for="{{ form.file.id_for_label }}">📎 Attach PDF / JPG / JPEG</label>
+                {{ form.file }}
+                <div class="tag-row">
+                    <label for="{{ form.tag.id_for_label }}">Tag</label>
+                    {{ form.tag }}
+                </div>
+            </div>
+            {% if form.file.errors %}<div class="form-error">{{ form.file.errors }}</div>{% endif %}
+
+            <div class="share-actions">
+                {{ form.share_with }}
+                <button type="submit" class="btn-btn-primary">Create &amp; Share</button>
+            </div>
+            {% if form.share_with.errors %}<div class="form-error">{{ form.share_with.errors }}</div>{% endif %}
+            <small class="hint">Text, a PDF, or a JPEG - at least one is required. Max 10 MB. Every note you post is visible to all logged-in users; the box above just tags specific people.</small>
+        </form>
+    </section>
+
+    <section class="notes-section" id="my-notes">
+        <h3>
+            {% if query %}Results for "{{ query }}"
+            {% elif mine_only %}My Notes ({{ my_notes_count }})
+            {% else %}All Notes ({{ total_notes }}){% endif %}
+        </h3>
+        <p class="feed-toggle">
+            <a href="{% url 'home' %}" class="{% if not mine_only %}active-filter{% endif %}">Everyone's notes</a>
+            &middot;
+            <a href="{% url 'home' %}?mine=1" class="{% if mine_only %}active-filter{% endif %}">Only mine</a>
+        </p>
+
+        <div class="notes-grid">
+            {% for item in note %}
+                <div class="note-card">
+                    <div class="note-header">
+                        <span class="tag tag-{{ item.tag }}">{{ item.get_tag_display }}</span>
+                        <span class="note-date">{{ item.date_posted|date:"M j" }}</span>
+                    </div>
+
+                    <h4><a href="{{ item.get_absolute_url }}">{{ item.subject }}</a></h4>
+
+                    {% if item.content %}
+                        <p>{{ item.content|truncatechars:140 }}</p>
+                    {% endif %}
+
+                    {% if item.file %}
+                        {% if item.is_image %}
+                            <a href="{{ item.file.url }}" target="_blank">
+                                <img src="{{ item.file.url }}" alt="{{ item.subject }}" class="note-thumb">
+                            </a>
+                        {% else %}
+                            <a href="{{ item.file.url }}" target="_blank" class="file-chip">📄 Open PDF</a>
+                        {% endif %}
+                    {% endif %}
+
+                    <div class="note-footer">
+                        <span class="shared-with">
+                            {% if item.owner == user %}
+                                Posted by you
+                            {% else %}
+                                Posted by {{ item.owner.username }}
+                            {% endif %}
+                            {% with count=item.shared_with.count %}
+                                {% if count %}&middot; tagged {{ count }} {{ count|pluralize:"person,people" }}{% endif %}
+                            {% endwith %}
+                        </span>
+                        <span class="note-actions">
+                            <span class="kind-chip">{{ item.kind }}</span>
+                            {% if item.owner == user %}
+                                <form method="post" action="{% url 'note-delete' item.pk %}"
+                                      onsubmit="return confirm('Delete this note?');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="delete-btn">Delete</button>
+                                </form>
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+            {% empty %}
+                {% if mine_only %}
+                    <p class="empty-state">You have not posted any notes yet. Create one above.</p>
+                {% else %}
+                    <p class="empty-state">No notes yet. Create the first one above.</p>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </section>
+
+</div>
+{% endblock %}

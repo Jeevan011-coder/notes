@@ -1,0 +1,188 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NoteHub – Study, Share, Grow</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EAF6FC;--bg2:#fff;--ink:#0B2A5B;--muted:#4A6285;--blue:#1B66E8;--mint:#DDEFD9;--line:rgba(11,42,91,.12);--nav:rgba(234,246,252,.82);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0A1730;--bg2:#10224A;--ink:#EAF3FF;--muted:#9DB3D6;--blue:#5B98FF;--mint:#12304A;--line:rgba(234,243,255,.14);--nav:rgba(10,23,48,.82)}}
+:root[data-theme="dark"]{--bg:#0A1730;--bg2:#10224A;--ink:#EAF3FF;--muted:#9DB3D6;--blue:#5B98FF;--mint:#12304A;--line:rgba(234,243,255,.14);--nav:rgba(10,23,48,.82)}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{font-family:'Outfit',system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+section{padding:96px 0}
+
+/* navbar */
+nav{transition:background .3s,border-color .3s;position:fixed;top:0;left:0;right:0;z-index:50;padding-top:env(safe-area-inset-top,0px);background:var(--nav);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:68px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.35rem;letter-spacing:-.02em}
+.brand img{height:34px;width:auto}
+.brand b{color:var(--blue)}
+.links{display:flex;align-items:center;gap:26px;font-weight:500}
+.links a.link:hover{color:var(--blue)}
+.btn{display:inline-block;border:0;cursor:pointer;font:inherit;font-weight:600;background:var(--blue);color:#fff;padding:10px 24px;border-radius:999px;transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(27,102,232,.35)}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.bar{position:absolute;left:0;bottom:-1px;height:3px;width:100%;background:var(--blue);transform-origin:left;transform:scaleX(0)}
+
+/* scroll-scrubbed intro */
+.scrub{position:relative;height:540vh}
+.stick{position:sticky;top:0;height:100vh;min-height:520px;overflow:hidden;background:linear-gradient(120deg,#8cc0e6,#d3ecdb)}
+.stick canvas{display:block;width:100%;height:100%}
+.cue{position:absolute;left:0;right:0;bottom:calc(22px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;align-items:center;gap:4px;color:#0B2A5B;font-weight:600;transition:opacity .3s;pointer-events:none}
+.cue svg{animation:bob 1.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(7px)}}
+nav.top{background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;border-bottom-color:transparent}
+nav.top .brand,nav.top .links a{color:#0B2A5B}
+
+.tb{display:flex;flex-direction:column;align-items:center;will-change:transform}
+.ttl{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#0B2A5B;will-change:transform,opacity,filter;pointer-events:none}
+.ttl img{height:clamp(56px,11vw,110px);width:auto;opacity:0}
+.word{font-weight:800;font-size:clamp(3.2rem,15vw,9rem);line-height:1;letter-spacing:-.04em;display:flex;margin-top:10px}
+.word span{display:inline-block;opacity:0}
+.word span:nth-child(n+5){color:#1B66E8}
+.tag{margin-top:16px;font-size:clamp(1rem,2.6vw,1.6rem);font-weight:500;letter-spacing:.14em;opacity:0}
+/* scroll reveal */
+.rv{opacity:0;transition:opacity .9s ease,transform .9s cubic-bezier(.2,.8,.2,1)}
+.up{transform:translateY(60px)}.left{transform:translateX(-80px)}.right{transform:translateX(80px)}.zoom{transform:scale(.85)}
+.rv.in{opacity:1;transform:none}
+.d1{transition-delay:.12s}.d2{transition-delay:.24s}
+
+h2{font-size:clamp(2rem,4.5vw,3.2rem);letter-spacing:-.03em;line-height:1.1;font-weight:700;margin-bottom:18px}
+.lead{color:var(--muted);font-size:1.15rem;max-width:620px}
+
+/* about */
+.feats{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:44px}
+.feat{background:var(--bg2);border:1px solid var(--line);border-radius:22px;padding:30px}
+.feat:nth-child(2){border-radius:22px 22px 22px 80px}
+.feat h3{font-size:1.35rem;margin-bottom:8px}
+.feat p{color:var(--muted)}
+.ico{width:48px;height:48px;border-radius:14px;background:var(--mint);display:grid;place-items:center;margin-bottom:18px;color:var(--blue)}
+
+/* contact */
+.contact{text-align:center}
+.contact .lead{margin:0 auto}
+.socials{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:40px}
+.soc{display:flex;align-items:center;gap:10px;padding:14px 24px;border-radius:999px;background:var(--bg2);border:1px solid var(--line);font-weight:600;transition:transform .2s,background .2s,color .2s}
+.soc:hover{transform:translateY(-4px);background:var(--blue);color:#fff}
+.soc svg{width:20px;height:20px;fill:currentColor}
+footer{padding:32px 0 40px;text-align:center;color:var(--muted);border-top:1px solid var(--line)}
+
+@media (max-width:760px){
+ section{padding:72px 0}
+ .feats{grid-template-columns:1fr}
+ .links{gap:14px}
+ .brand{font-size:1.15rem}
+ .left,.right{transform:translateY(50px)}
+}
+@media (prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto}
+ .rv,h1 span{opacity:1!important;transform:none!important;transition:none;animation:none}
+}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+</style>
+</head>
+<body>
+
+<nav>
+ <div class="wrap">
+  <a class="brand" href="#top" aria-label="NoteHub home"><img src="{% static 'landing/logo.png' %}" alt=""><span>Note<b>Hub</b></span></a>
+  <div class="links">
+   <a class="link" href="#about">About</a>
+   {% if user.is_authenticated %}<a class="btn" href="{% url 'home' %}">Dashboard</a>{% else %}<a class="btn" href="{% url 'login' %}">Login</a>{% endif %}
+  </div>
+ </div>
+ <div class="bar" id="bar"></div>
+</nav>
+
+<main id="top">
+ <header class="scrub" id="scrub" aria-label="NoteHub intro">
+  <div class="stick">
+   <canvas id="cv" role="img" aria-label="The NoteHub name appears, then a book opens as you scroll"></canvas>
+   <div class="ttl" id="ttl"><div class="tb" id="tb"><img id="ttlimg" alt=""><div class="word" id="word" aria-label="NoteHub"></div><div class="tag" id="tag">Study · Share · Grow</div></div>
+   <div class="cue" id="cue">Scroll to begin<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+  </div>
+ </header>
+
+ <section id="about">
+  <div class="wrap">
+   <h2 class="rv left">Notes work better when they travel.</h2>
+   <p class="lead rv right d1">Upload your class notes, find what others have shared, and stay ready for every exam. NoteHub keeps it all in one place.</p>
+   <div class="cta rv up d2">{% if user.is_authenticated %}<a class="btn" href="{% url 'home' %}">Open your dashboard</a>{% else %}<a class="btn" href="{% url 'register' %}">Create free account</a><a class="btn ghost" href="{% url 'login' %}">Log in</a>{% endif %}</div>
+   <div class="feats">
+    <div class="feat rv up">
+     <div class="ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/></svg></div>
+     <h3>Study</h3><p>Read clear, organised notes by subject and topic, whenever you need them.</p>
+    </div>
+    <div class="feat rv up d1">
+     <div class="ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg></div>
+     <h3>Share</h3><p>Post your own notes so your friends and classmates can learn from them too.</p>
+    </div>
+    <div class="feat rv up d2">
+     <div class="ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg></div>
+     <h3>Grow</h3><p>Build your knowledge one note at a time and see your understanding improve.</p>
+    </div>
+   </div>
+  </div>
+ </section>
+
+ <section class="contact" id="contact">
+  <div class="wrap">
+   <h2 class="rv up">Contact us</h2>
+   <p class="lead rv up d1">Have a question, an idea, or feedback? Reach out on any of these.</p>
+   <div class="socials">
+    <a class="soc rv zoom" href="https://www.instagram.com/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zm5 3.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9zm0 2a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM17.5 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>Instagram</a>
+    <a class="soc rv zoom d1" href="https://www.linkedin.com/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.5h4V21H3zm7 0h3.8v1.6h.1c.6-1 1.9-1.9 3.9-1.9 4.1 0 4.7 2.6 4.7 6V21h-4v-5c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.700V21h-4z"/></svg>LinkedIn</a>
+    <a class="soc rv zoom d2" href="https://github.com/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M12 .5a11.5 11.5 0 0 0-3.6 22.4c.6.1.8-.3.8-.6v-2c-3.200.7-3.900-1.400-3.900-1.400-.5-1.300-1.300-1.700-1.300-1.700-1-.7.1-.7.1-.7 1.200.1 1.800 1.200 1.800 1.200 1 1.800 2.700 1.300 3.400 1 .1-.8.4-1.300.7-1.600-2.600-.3-5.300-1.300-5.300-5.700 0-1.300.5-2.300 1.200-3.100-.1-.3-.5-1.500.1-3.100 0 0 1-.3 3.200 1.200a11 11 0 0 1 5.800 0c2.200-1.500 3.200-1.200 3.200-1.200.6 1.600.2 2.800.1 3.100.8.8 1.200 1.800 1.200 3.100 0 4.400-2.700 5.400-5.300 5.700.4.400.8 1.100.8 2.200v3.200c0 .3.2.7.8.6A11.500 11.500 0 0 0 12 .5z"/></svg>GitHub</a>
+    <a class="soc rv zoom d1" href="mailto:hello@notehub.app"><svg viewBox="0 0 24 24"><path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm9 7L4.500 7h15zm0 2.200L4 8.700V17h16V8.700z"/></svg>Email</a>
+    <a class="soc rv zoom d2" href="https://wa.me/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.600 15.100L2 22l5-1.300A10 10 0 1 0 12 2zm0 2a8 8 0 1 1-4.200 14.800l-.3-.2-2.900.8.8-2.800-.2-.3A8 8 0 0 1 12 4zm-3 3.500c-.3 0-.7.100-1 .5-.4.500-1 1.200-1 2.500s1 2.700 1.100 2.900c.1.200 2 3.200 5 4.300 2.500.9 3 .7 3.500.7s1.700-.7 1.900-1.400c.2-.7.2-1.300.2-1.400-.1-.1-.3-.2-.6-.4l-1.900-.9c-.3-.1-.5-.1-.7.100l-.8 1c-.2.200-.3.200-.6.100-.3-.2-1.200-.4-2.300-1.400-.8-.8-1.400-1.700-1.600-2-.2-.3 0-.4.100-.6l.5-.5.300-.5c.1-.2 0-.4 0-.5l-.9-2.100c-.2-.5-.5-.5-.7-.5z"/></svg>WhatsApp</a>
+   </div>
+  </div>
+ </section>
+</main>
+
+<footer><div class="wrap">© 2026 NoteHub · Study, Share, Grow</div></footer>
+
+<script>var FB="{% static 'landing/frames/' %}";window.NHF=Array.from({length:120},function(_,i){return FB+'f'+('00'+(i+1)).slice(-3)+'.jpg'});</script>
+<script>
+// scroll reveal
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.18});
+document.querySelectorAll('.rv').forEach(function(el){io.observe(el)});
+// nav state + progress bar + scroll story: blank -> name -> name recedes while the book opens
+var nav=document.querySelector('nav'),bar=document.getElementById('bar'),cue=document.getElementById('cue'),
+cv=document.getElementById('cv'),ctx=cv.getContext('2d'),sc=document.getElementById('scrub'),
+tb=document.getElementById('tb'),ty=0,ts=1,tag=document.getElementById('tag'),ti=document.getElementById('ttlimg'),word=document.getElementById('word'),
+still=matchMedia('(prefers-reduced-motion:reduce)').matches,
+imgs=(window.NHF||[]).map(function(s){var m=new Image();m.onload=draw;m.src=s;return m}),prog=0;
+ti.src=document.querySelector('.brand img').src;
+"NoteHub".split('').forEach(function(c){var s=document.createElement('span');s.textContent=c;word.appendChild(s)});
+var L=word.children;
+function cl(x){return Math.max(0,Math.min(1,x))}function ez(x){return 1-Math.pow(1-x,3)}
+function fit(){var d=Math.min(devicePixelRatio||1,2),W=cv.clientWidth,H=cv.clientHeight;cv.width=W*d;cv.height=H*d;
+ var por=W<H,k=por?W/1024:Math.max(W/1024,H/576),dh=576*k,dy=(H-dh)/2,hn=tb.offsetHeight||1;
+ ts=Math.min(1,(.23*dh*(por?1.5:1))/hn);ty=dy+.185*dh-H/2;draw()}
+function put(im,a){if(!im||!im.complete||!im.naturalWidth)return;
+ var W=cv.width,H=cv.height,s=W<H?W/im.naturalWidth:Math.max(W/im.naturalWidth,H/im.naturalHeight),w=im.naturalWidth*s,h=im.naturalHeight*s;
+ ctx.globalAlpha=a;ctx.drawImage(im,(W-w)/2,(H-h)/2,w,h)}
+function draw(){if(!imgs.length)return;var x=prog*(imgs.length-1),i=Math.floor(x),f=x-i;
+ ctx.clearRect(0,0,cv.width,cv.height);put(imgs[i],1);if(f>.02&&imgs[i+1])put(imgs[i+1],f);ctx.globalAlpha=1}
+function onScroll(){var h=document.documentElement,y=h.scrollTop,r=sc.getBoundingClientRect();
+ bar.style.transform='scaleX('+(y/((h.scrollHeight-h.clientHeight)||1))+')';
+ nav.classList.toggle('top',y<40);cue.style.opacity=y>60?0:1;
+ var p=still?1:cl(-r.top/(sc.offsetHeight-innerHeight)),a=cl(p/.22),b=ez(cl((p-.30)/.2));
+ ti.style.opacity=ez(cl(a*2));ti.style.transform='scale('+(.6+.4*ez(cl(a*2)))+')';
+ for(var i=0;i<L.length;i++){var k=ez(cl(a*1.7-i*.13));L[i].style.opacity=k;L[i].style.transform='translateY('+(1-k)*45+'px)'}
+ tag.style.opacity=ez(cl((a-.65)/.35));
+ tb.style.transform='translateY('+(ty*b)+'px) scale('+(1+(ts-1)*b)+')';
+ cv.style.opacity=b;prog=cl((p-.30)/.70);draw()}
+addEventListener('scroll',onScroll,{passive:true});addEventListener('resize',fit);fit();onScroll();
+</script>
+</body>
+</html>

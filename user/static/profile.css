@@ -1,0 +1,477 @@
+/* ================= Reset & Base ================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+:root {
+    --primary: #6c5ce7;
+    --primary-dark: #5849c2;
+    --primary-light: #a29bfe;
+    --accent: #00cec9;
+    --text-dark: #2d3436;
+    --text-muted: #6c757d;
+    --bg: #f4f5fb;
+    --bg-alt: #eef1ff;
+    --card-bg: #ffffff;
+    --input-bg: #fbfbfe;
+    --border: #ececf6;
+    --success: #00b894;
+    --danger: #e74c3c;
+    --sidebar-bg: #ffffff;
+    --shadow: rgba(60, 60, 130, 0.10);
+    --transition-theme: background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+html.dark {
+    --text-dark: #eceefc;
+    --text-muted: #a0a3c0;
+    --bg: #10111a;
+    --bg-alt: #161826;
+    --card-bg: #1b1d2b;
+    --input-bg: #232538;
+    --border: #2c2e42;
+    --sidebar-bg: #161826;
+    --shadow: rgba(0, 0, 0, 0.35);
+}
+
+html, body {
+    transition: var(--transition-theme);
+}
+
+* {
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+body {
+    background: linear-gradient(135deg, var(--bg) 0%, var(--bg-alt) 100%);
+    min-height: 100vh;
+    width: 100%;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Sidebar layout is normally inherited from home.css, but we redeclare the
+   full rule here (higher specificity + !important) to guarantee the navbar
+   is always pinned flush to the left edge of the viewport on this page. */
+.dashboard-container {
+    display: flex !important;
+    min-height: 100vh !important;
+    width: 100% !important;
+}
+
+body .sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    height: 100vh !important;
+    width: 260px !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    z-index: 50;
+}
+
+.main-content {
+    margin-left: 260px !important;
+    display: flex;
+    justify-content: center;
+}
+
+@media (max-width: 900px) {
+    body .sidebar {
+        width: 70px !important;
+    }
+    .main-content {
+        margin-left: 70px !important;
+    }
+}
+
+.page-wrap {
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+/* ================= Flash messages ================= */
+.messages-stack {
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+.flash-message {
+    background: #e8fff8;
+    border: 1px solid #b6f2e2;
+    color: #05875a;
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    animation: slideDown 0.45s ease;
+    box-shadow: 0 2px 8px rgba(0, 184, 148, 0.12);
+}
+
+html.dark .flash-message {
+    background: #0d2e26;
+    border-color: #124a3c;
+    color: #4be3b8;
+}
+
+/* ================= Card ================= */
+.profile-card {
+    width: 100%;
+    background: var(--card-bg);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px var(--shadow);
+    animation: cardEnter 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    border: 1px solid var(--border);
+}
+
+.cover-banner {
+    height: 110px;
+    width: 100%;
+    background: linear-gradient(120deg, var(--primary), var(--accent), var(--primary-light));
+    background-size: 200% 200%;
+    animation: gradientShift 8s ease infinite;
+    display: flex;
+    align-items: center;
+    padding-left: 30px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    animation: fadeUp 0.6s 0.1s ease both;
+}
+
+.brand-icon {
+    font-size: 22px;
+    display: inline-block;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.15));
+}
+
+.brand-text {
+    display: inline-flex;
+    font-size: 19px;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.brand-text span {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(14px);
+    animation: letterReveal 0.5s ease forwards;
+    animation-delay: calc(var(--i) * 0.09s);
+}
+
+/* ================= Profile top section ================= */
+.profile-section {
+    display: flex;
+    align-items: center;
+    gap: 26px;
+    padding: 0 34px 26px 34px;
+    margin-top: -55px;
+    flex-wrap: wrap;
+}
+
+.avatar-ring {
+    width: 118px;
+    height: 118px;
+    border-radius: 50%;
+    padding: 5px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    box-shadow: 0 8px 22px rgba(108, 92, 231, 0.35);
+    flex-shrink: 0;
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+    animation: popIn 0.6s 0.15s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.avatar-ring:hover {
+    transform: scale(1.06) rotate(-2deg);
+    box-shadow: 0 12px 30px rgba(108, 92, 231, 0.45);
+}
+
+.avatar-ring .avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-alt);
+    border: 3px solid var(--card-bg);
+}
+
+.avatar-ring .avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.8);
+    transform-origin: 35% 28%;
+    transition: transform 0.4s ease;
+}
+
+.avatar-ring:hover .avatar img {
+    transform: scale(1.95);
+}
+
+.avatar-fallback {
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.user-details {
+    padding-top: 60px;
+    animation: fadeUp 0.6s 0.25s ease both;
+}
+
+.user-name {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+    letter-spacing: -0.3px;
+}
+
+.user-email {
+    font-size: 14.5px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+}
+
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--success);
+    background: #e6faf3;
+    padding: 4px 12px;
+    border-radius: 999px;
+}
+
+html.dark .status-pill {
+    background: #0d2e26;
+}
+
+.dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--success);
+    display: inline-block;
+    animation: pulse 1.8s infinite;
+}
+
+/* ================= Form section ================= */
+.form-section {
+    padding: 10px 34px 34px 34px;
+    border-top: 1px solid var(--border);
+    padding-top: 26px;
+    animation: fadeUp 0.6s 0.3s ease both;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+}
+
+.section-subtitle {
+    font-size: 13.5px;
+    color: var(--text-muted);
+    margin-bottom: 22px;
+}
+
+/* Style Django's auto-generated <p><label><input></p> markup */
+.profile-form p {
+    margin-bottom: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    opacity: 0;
+    animation: fadeUp 0.5s ease forwards;
+}
+
+.profile-form p:nth-of-type(1) { animation-delay: 0.35s; }
+.profile-form p:nth-of-type(2) { animation-delay: 0.42s; }
+.profile-form p:nth-of-type(3) { animation-delay: 0.49s; }
+.profile-form p:nth-of-type(4) { animation-delay: 0.56s; }
+
+.profile-form label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-dark);
+    text-transform: capitalize;
+}
+
+.profile-form input[type="text"],
+.profile-form input[type="email"],
+.profile-form input[type="password"] {
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-size: 14.5px;
+    color: var(--text-dark);
+    background: var(--input-bg);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    width: 100%;
+}
+
+.profile-form input[type="text"]:focus,
+.profile-form input[type="email"]:focus,
+.profile-form input[type="password"]:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: var(--card-bg);
+    box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.12);
+}
+
+.profile-form input[type="file"] {
+    padding: 10px;
+    border: 1.5px dashed var(--primary-light);
+    border-radius: 10px;
+    background: var(--input-bg);
+    font-size: 13.5px;
+    color: var(--text-dark);
+    cursor: pointer;
+    transition: border-color 0.25s ease, background 0.25s ease;
+}
+
+.profile-form input[type="file"]:hover {
+    border-color: var(--primary);
+    background: var(--bg-alt);
+}
+
+.profile-form ul.errorlist {
+    list-style: none;
+    color: var(--danger);
+    font-size: 12.5px;
+    font-weight: 500;
+}
+
+.profile-form a {
+    color: var(--primary);
+}
+
+/* ================= Button ================= */
+.btn-update {
+    position: relative;
+    overflow: hidden;
+    margin-top: 6px;
+    padding: 13px 32px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(108, 92, 231, 0.35);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    animation: fadeUp 0.5s 0.62s ease both;
+}
+
+.btn-update:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(108, 92, 231, 0.45);
+}
+
+.btn-update:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 12px rgba(108, 92, 231, 0.35);
+}
+
+.btn-update::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.35);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.5s ease, height 0.5s ease;
+}
+
+.btn-update:active::after {
+    width: 260px;
+    height: 260px;
+}
+
+/* ================= Keyframes ================= */
+@keyframes cardEnter {
+    from { opacity: 0; transform: translateY(24px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes popIn {
+    from { opacity: 0; transform: scale(0.7); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(0, 184, 148, 0.5); }
+    70% { box-shadow: 0 0 0 6px rgba(0, 184, 148, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(0, 184, 148, 0); }
+}
+
+@keyframes letterReveal {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ================= Responsive ================= */
+/* Sidebar collapse breakpoint is handled by home.css */
+@media (max-width: 560px) {
+    .cover-banner {
+        padding-left: 20px;
+    }
+    .brand-text {
+        font-size: 16px;
+    }
+    .profile-section {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-top: -45px;
+    }
+    .user-details {
+        padding-top: 12px;
+    }
+    .form-section, .profile-section {
+        padding-left: 22px;
+        padding-right: 22px;
+    }
+}

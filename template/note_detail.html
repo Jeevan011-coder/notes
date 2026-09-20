@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}{{ note.subject }} - ShareNotes{% endblock %}
+
+{% block content %}
+<div class="dashboard-body">
+    <section class="create-note-box">
+        <div class="note-header">
+            <span class="tag tag-{{ note.tag }}">{{ note.get_tag_display }}</span>
+            <span class="note-date">{{ note.date_posted|date:"M j, Y" }}</span>
+        </div>
+
+        <h3>{{ note.subject }}</h3>
+        <p class="detail-meta">
+            By {{ note.owner.username }}
+            {% with people=note.shared_with.all %}
+                {% if people %}&middot; shared with {% for p in people %}{{ p.username }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}
+            {% endwith %}
+        </p>
+
+        {% if note.content %}
+            <p class="detail-content">{{ note.content|linebreaks }}</p>
+        {% endif %}
+
+        {% if note.file %}
+            {% if note.is_image %}
+                <img src="{{ note.file.url }}" alt="{{ note.subject }}" class="detail-image">
+            {% else %}
+                <embed src="{{ note.file.url }}" type="application/pdf" class="detail-pdf">
+            {% endif %}
+            <p><a href="{{ note.file.url }}" target="_blank" class="file-chip">⬇ Download attachment</a></p>
+        {% endif %}
+
+        <div class="share-actions">
+            <a href="{% url 'home' %}" class="btn-btn-primary" style="text-decoration:none;text-align:center;">Back to dashboard</a>
+            {% if note.owner == user %}
+                <form method="post" action="{% url 'note-delete' note.pk %}"
+                      onsubmit="return confirm('Delete this note?');">
+                    {% csrf_token %}
+                    <button type="submit" class="delete-btn">Delete note</button>
+                </form>
+            {% endif %}
+        </div>
+    </section>
+</div>
+{% endblock %}
